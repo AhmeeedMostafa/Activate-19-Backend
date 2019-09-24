@@ -1,0 +1,9 @@
+{
+  "name": "ActivateByAIESECinCU",
+  "version": "1.0.0",
+  "description": "Activate'19 Conference Backend side for AIESEC in Cairo University",
+  "main": "app.js",
+  "repository": "https://github.com/AhmeeedMostafa/Activate-19-Backend.git",
+  "author": "Ahmed Khallaf",
+  "license": "MIT"
+}

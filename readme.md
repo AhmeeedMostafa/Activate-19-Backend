@@ -1,6 +1,6 @@
-# Project Title
+# Activate'19
 
-A nice project with a nice description
+Activate '19 Conference backend side for supporting the operations of activate'19 mobile applications.
 
 ---
 ## Requirements

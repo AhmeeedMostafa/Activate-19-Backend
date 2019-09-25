@@ -4,13 +4,18 @@
   "description": "Activate'19 Conference Backend side for AIESEC in Cairo University",
   "main": "app.js",
   "scripts": {
-    "dev": "node app.js"
+    "run": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": "https://github.com/AhmeeedMostafa/Activate-19-Backend.git",
   "author": "Ahmed Khallaf",
   "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.4",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "firebase-admin": "^8.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
   }
 }

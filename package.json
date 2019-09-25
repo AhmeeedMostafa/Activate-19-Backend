@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Activate'19 Conference Backend side for AIESEC in Cairo University",
   "main": "app.js",
+  "scripts": {
+    "dev": "node app.js"
+  },
   "repository": "https://github.com/AhmeeedMostafa/Activate-19-Backend.git",
   "author": "Ahmed Khallaf",
   "license": "MIT",
   "dependencies": {
+    "cookie-parser": "^1.4.4",
     "express": "^4.17.1"
   }
 }

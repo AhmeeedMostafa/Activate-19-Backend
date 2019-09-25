@@ -98,4 +98,4 @@ public
 .dynamodb/
 
 # Secret/Private JSONs
-firebaseServiceAccKey.json
+src/assets/firebaseServiceAccKey.json

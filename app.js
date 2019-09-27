@@ -1,20 +1,35 @@
+require('dotenv').config()
 const express = require("express");
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+
+const { verifyUser } = require('./src/middlewares/user');
+const auth = require('./src/routes/auth');
+const constants = require('./src/routes/constants');
+const delegates = require('./src/routes/delegates');
+const agenda = require('./src/routes/agenda');
 
 const app = express();
-const port = normalizePort(process.env.PORT || '3000');
+const port = process.env.PORT || '3000';
 
+// Parsing Cookies to be included explicity in the req. object.
 app.use(cookieParser())
+
+// Parsing Body to be included explicity in the req. object.
+app.use(bodyParser.json());
 
 app.set('port', port);
 
-app.get('/', (req, res) => {
-  // res.send("HELLO WORD");
-  res.json({"hey": "fine"})
-})
+app.use('/auth', auth);
 
-app.use(function (req, res, next) {
-  res.status(404).send("Sorry can't find that!")
+app.use(verifyUser);
+
+app.use('/delegates', delegates);
+app.use('/agenda', agenda);
+app.use('/constants', constants);
+
+app.use(function (_, res) {
+  res.status(404).send("[404], Invalid request page not found!")
 })
 
 app.listen(port, () => console.log(`Server is running on port ${port}`))

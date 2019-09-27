@@ -26,7 +26,7 @@ const getAll = (page, limit, lc = null, phone = null) => {
       return Promise.resolve(data);
     })
     .catch((err) => {
-      return Promise.reject(`Error: ${err}.`);
+      return Promise.reject(`${err}`);
     });
 }
 
@@ -40,7 +40,7 @@ const findDelegateByEmail = (email, returnFields = true) => (
       const user = snapshot.docs[0];
       return Promise.resolve(returnFields ? { id: user.id, ...user.data() } : true);
     }).catch(err => {
-      return Promise.reject(`Error: ${err}`);
+      return Promise.reject(`${err}`);
     })
 );
 
@@ -54,7 +54,7 @@ const findDelegateById = (id, returnFields = true) => (
 
       return Promise.resolve(returnFields ? { id, ...snapshot.data() } : true);
     }).catch((err) => {
-      return Promise.reject(`Error: ${err}`);
+      return Promise.reject(`${err}`);
     })
 );
 

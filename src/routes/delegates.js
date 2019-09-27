@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { findDelegateById, toggleStatus, getAll } = require('../queries/delegates');
 const { success, error } = require('../assets/responses');
 const { checkUserRolePartially } = require('../assets/utilities');
-const { userCanAct } = require('../middlewares/user');
+const { isUserPermittedTo } = require('../middlewares/user');
 const { statuses } = require('../assets/constants');
 
 // Retrieving all the delegates
@@ -34,8 +34,8 @@ router.get('/:id', (req, res) => {
 });
 
 // Toggle Delegate status between (Not-attended) & (Checked-in) & (Checked-out).
-// userCanAct middleware is checking if the user has permission to change the status or not.
-router.patch('/status', userCanAct('scan'), (req, res) => {
+// isUserPermittedTo middleware is checking if the user has permission to change the status or not.
+router.patch('/status', isUserPermittedTo('scan'), (req, res) => {
   const { id, status } = req.body;
 
   if (!id || !status)

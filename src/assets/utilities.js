@@ -43,7 +43,7 @@ const sendEmail = async (to, subject, body) => {
   }
 }
 
-const checkUserRolePartially = (userRole, needRole, rolePart) => {
+const checkUserRolePartially = (userRole, neededRole, rolePart) => {
   // EX: oc-teamster-de
   // Type => oc
   // position => teamster
@@ -64,9 +64,13 @@ const checkUserRolePartially = (userRole, needRole, rolePart) => {
       break;
   }
 
-  const checkingPart = userRole.split('-')[partNo];
+  if (!userRole)
+    return false;
 
-  return checkingPart && checkingPart.toLowerCase() == needRole.toLowerCase();
+  const checkingPart = userRole.split('-')[partNo];
+  const allowedForAll = ['im', 'all'];
+
+  return checkingPart && (checkingPart.toLowerCase() == neededRole.toLowerCase() || allowedForAll.includes(checkingPart.toLowerCase()));
 }
 
 module.exports = { sortObject, daysNumbering, sendEmail, checkUserRolePartially }

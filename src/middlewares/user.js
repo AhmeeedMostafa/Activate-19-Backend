@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { checkUserRolePartially } = require('../assets/utilities');
 const { error } = require('../assets/responses');
 
 // Verifying user token (JWT) & decoding the data from the token to get the current user info.
@@ -31,14 +32,23 @@ const userHasRole = (roles) => (
 
 // Check if the user has the permission to do a specfic action,
 // (action name should be equal to the saved in db. in permissions object)
-const userCanAct = (action) => (
+const isUserPermittedTo = (action) => (
   (req, res, next) => {
     const userPermissions = req.user.permissions;
     return (userPermissions
       && (userPermissions[`can_${action}`] || false))
       ? next()
-      : res.status(401).json('Oops, You are not allowed to do this operation.')
+      : res.status(401).json(error('Oops, You are not allowed to do this operation.'))
   }
+);
+
+// Check if this request is allowed for the current user whether by checking if the request is about his acc. or from a specfic accepted group.
+const selfUserAndGroup = (group, groupBy) => (
+  (req, res, next, userId) => (
+    (userId && (req.user.id === userId || checkUserRolePartially(req.user.role, group, groupBy)))
+      ? next()
+      : res.status(401).json(error('Oops, You are not allowed to do this operation.'))
+  )
 );
 
 // oc-teamster-se, groupBy vals => { type, position, function }
@@ -48,8 +58,8 @@ const groupOfUsers = (group, groupBy) => (
   (req, res, next) => {
     return checkUserRolePartially(req.user.role, group, groupBy)
       ? next()
-      : res.status(401).json('Oops, You are not allowed to do this operation.')
+      : res.status(401).json(error('Oops, You are not allowed to do this operation.'))
   }
-)
+);
 
-module.exports = { userHasRole, userCanAct, verifyUser, groupOfUsers }
+module.exports = { userHasRole, isUserPermittedTo, verifyUser, groupOfUsers, selfUserAndGroup }

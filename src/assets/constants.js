@@ -107,6 +107,14 @@ const ocRoles = [
     code: 'mc-responsible-none',
     title: 'MC Responsible',
   },
-]
+];
 
-module.exports = { statuses, times, tracks, days };
+const permissions = {
+  ADD_MERCHANDISE: 'add_merchandise',
+  DELETE_MERCHANDISE: 'deleted_merchandise',
+  ADD_SESSION: 'add_session',
+  EDIT_SESSION: 'edit_session',
+  SCAN_OPERATIONS: 'scan_operations',
+}
+
+module.exports = { statuses, times, tracks, days, permissions };

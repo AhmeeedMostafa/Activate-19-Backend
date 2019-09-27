@@ -1,8 +1,9 @@
 const router = require('express').Router();
 
-const { order, getAll, addItem, userCart } = require('../queries/merchandise');
+const { order, getAll, addItem, userCart, deleteItem } = require('../queries/merchandise');
 const { success, error } = require('../assets/responses');
 const { isUserPermittedTo, selfUserAndGroup } = require('../middlewares/user');
+const { permissions } = require('../assets/constants');
 
 // Showing all the available merchandise
 router.get('/', (req, res) => {
@@ -24,13 +25,25 @@ router.post('/', (req, res) => {
 });
 
 // For adding new item in the merchandise route.
-router.post('/add', (req, res) => {
+router.post('/add', isUserPermittedTo(permissions.ADD_MERCHANDISE), (req, res) => {
   const { name, code, photo, price, description } = req.body;
 
   if (!name || !code || !price || !photo || !description)
     return res.status(400).json(error("You are missing some property of the item (name, price, code, photo or description)."));
 
   addItem({ name, price, code, photo, description }, req.user.id)
+    .then(result => res.status(200).json(success(result)))
+    .catch(err => res.status(403).json(error(err)));
+});
+
+// For deleteing current item of merchandise
+router.delete('/:itemId', isUserPermittedTo(permissions.DELETE_MERCHANDISE), (req, res) => {
+  const { itemId } = req.params;
+
+  if (!itemId)
+    return res.status(400).json(error("You are missing the id of needed deleted item."))
+
+  deleteItem(itemId, req.user.id)
     .then(result => res.status(200).json(success(result)))
     .catch(err => res.status(403).json(error(err)));
 });

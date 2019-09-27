@@ -4,7 +4,7 @@ const { findDelegateById, toggleStatus, getAll } = require('../queries/delegates
 const { success, error } = require('../assets/responses');
 const { checkUserRolePartially } = require('../assets/utilities');
 const { isUserPermittedTo } = require('../middlewares/user');
-const { statuses } = require('../assets/constants');
+const { statuses, permissions } = require('../assets/constants');
 
 // Retrieving all the delegates
 router.get('/', (req, res) => {
@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
 
 // Toggle Delegate status between (Not-attended) & (Checked-in) & (Checked-out).
 // isUserPermittedTo middleware is checking if the user has permission to change the status or not.
-router.patch('/status', isUserPermittedTo('scan'), (req, res) => {
+router.patch('/status', isUserPermittedTo(permissions.SCAN_OPERATIONS), (req, res) => {
   const { id, status } = req.body;
 
   if (!id || !status)

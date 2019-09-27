@@ -4,7 +4,7 @@ const db = require('../firestore');
 const { getAll, addSession, modifyTimeSessions } = require('../queries/agenda');
 const { isUserPermittedTo } = require('../middlewares/user');
 const { success, error } = require('../assets/responses');
-const { times, days, tracks } = require('../assets/constants');
+const { times, days, tracks, permissions } = require('../assets/constants');
 
 // Getting all the agenda route
 router.get('/', (_, res) => {
@@ -14,7 +14,7 @@ router.get('/', (_, res) => {
 });
 
 // Adding new session to the agenda's time route
-router.post('/', isUserPermittedTo('add_session'), (req, res) => {
+router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
   const { day, time, title, startsAt, duration, faci, by, hall, track } = req.body;
   if (!day || !time || !title || !startsAt || !duration || !faci || !by || !hall || !track)
     return res.status(400).json(error("You are missing some property (day, time, title, startsAt, duration, faci, by, hall, track)."))
@@ -30,7 +30,7 @@ router.post('/', isUserPermittedTo('add_session'), (req, res) => {
     .catch(err => res.status(403).json(success(err)))
 });
 
-router.patch('/', isUserPermittedTo('edit_session'), (req, res) => {
+router.patch('/', isUserPermittedTo(permissions.EDIT_SESSION), (req, res) => {
   const { day, time, timeSessions } = req.body;
 
   if (!day || !time || !timeSessions)

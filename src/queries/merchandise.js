@@ -1,11 +1,14 @@
+const admin = require('firebase-admin');
 const db = require('../firestore');
 const { findDelegateById } = require('./delegates');
 const currentDate = require('../assets/currentDate');
 
+const collection = db.collection('merchandise');
+
 // For retrieving all the available items of merchandise
 const getAll = async () => {
   try {
-    const merchandise = await db.collection('merchandise').where('deletedAt', '==', null).orderBy('addedAt').get();
+    const merchandise = await collection.where('deletedAt', '==', null).orderBy('addedAt', 'desc').get();
     if (merchandise.empty)
       return Promise.resolve([])
 
@@ -19,10 +22,16 @@ const getAll = async () => {
 
 // For adding an item into the collection of the merchandise
 const addItem = (itemDetails, addedById) => (
-  db.collection('merchandise').add({ ...itemDetails, addedAt: currentDate, addedBy: db.doc(`delegates/${addedById}`), deletedAt: null, deletedBy: null })
+  collection.add({ ...itemDetails, addedAt: currentDate, addedBy: db.doc(`delegates/${addedById}`), deletedAt: null, deletedBy: null, orderBy: [] })
     .then(_result => Promise.resolve('Item has been added successfully.'))
     .catch(err => Promise.reject(`${err}`))
 );
+
+// For deleteing item from the merchandise list
+const deleteItem = (itemId, userId) => {
+  const itemRef = collection.doc(itemId)
+  return itemRef.update({ deletedAt: currentDate, deletedBy: db.doc(`delegates/${userId}`) });
+}
 
 // For ordering merchandise
 const order = async (userId, items) => {
@@ -34,7 +43,10 @@ const order = async (userId, items) => {
         return await Promise.reject('We couldnt find your account in our records please login again & try once more.')
 
       const merchandise = user.data().merchandise || [];
-      items.forEach(item => merchandise.push({ item: db.doc(`merchandise/${item.id}`), quantity: item.quantity }))
+      items.forEach(item => {
+        merchandise.push({ item: db.doc(`merchandise/${item.id}`), quantity: item.quantity })
+        collection.doc(item.id).update({ orderedBy: admin.firestore.FieldValue.arrayUnion({ userId: db.doc(`delegates/${userId}`), quantity: item.quantity }) })
+      })
       t.update(userRef, { merchandise });
       return await Promise.resolve(true);
     } catch (ex) {
@@ -54,4 +66,4 @@ const userCart = async (userId) => {
   }
 }
 
-module.exports = { getAll, order, addItem, userCart }
+module.exports = { getAll, order, addItem, userCart, deleteItem }

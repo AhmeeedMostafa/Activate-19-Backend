@@ -1,1 +1,5 @@
 language: node_js
+notifications:
+  email:
+    - ahmed.khallaf2@aiesec.net
+    - ahmed.mostafa1198@gmail.com

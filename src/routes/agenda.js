@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const db = require('../firestore');
 
 const { getAll, addSession, modifyTimeSessions } = require('../queries/agenda');
 const { isUserPermittedTo } = require('../middlewares/user');

@@ -9,6 +9,10 @@ const constants = require('./src/routes/constants');
 const delegates = require('./src/routes/delegates');
 const agenda = require('./src/routes/agenda');
 const merchandise = require('./src/routes/merchandise');
+const photo = require('./src/routes/photo');
+const notifications = require('./src/routes/notifications');
+
+const { success } = require('./src/assets/responses');
 
 const app = express();
 const port = process.env.PORT || '3000';
@@ -25,10 +29,13 @@ app.use('/auth', auth);
 
 app.use(verifyUser);
 
+app.get('/current_user', (req, res) => res.status(200).json(success(req.user)))
 app.use('/delegates', delegates);
+app.use('/photo', photo);
 app.use('/agenda', agenda);
 app.use('/constants', constants);
 app.use('/merchandise', merchandise);
+app.use('/notifications', notifications);
 
 app.use(function (_, res) {
   res.status(404).send("404, Invalid request page not found.")

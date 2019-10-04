@@ -4,12 +4,11 @@ const { error } = require('../assets/responses');
 
 // Verifying user token (JWT) & decoding the data from the token to get the current user info.
 const verifyUser = (req, res, next) => {
-  const token = req.headers.authorization;
+  let token = req.headers.authorization;
   if (!token)
     return res.status(401).json(error('Unauthorized user, you are not allowed to do this operation please login.'))
 
-  // token = token.split(' ')[1];
-
+  token = token.split(' ')[1];
   jwt.verify(token, process.env.SECRET_KEY, (err, decodedData) => {
     if (err)
       return res.status(401).json(error('Invalid login token, please login again.'))

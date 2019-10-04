@@ -10,7 +10,7 @@ const getAll = () => (
         return Promise.resolve([]);
 
       const agenda = [];
-      snapshot.forEach(doc => agenda.push({ day: daysNumbering(doc.id), data: sortObject(doc.data()), }));
+      snapshot.forEach(doc => agenda.push({ day: daysNumbering(doc.id), data: [sortObject(doc.data())] }));
       return Promise.resolve(agenda);
     })
     .catch((err) => Promise.reject(`Error: ${err.message}`))

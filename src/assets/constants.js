@@ -1,8 +1,10 @@
-const statuses = [
-  'Not-attend',
-  'Checked-in',
-  'Checked-out',
-];
+const statuses = {
+  checkInfo: 'check-info',
+  notAttend: 'Not-attend',
+  checkIn: 'Checked-in',
+  checkOut: 'Checked-out',
+  merchandise: 'merchandise',
+};
 
 const times = [
   '07:00 AM',
@@ -24,6 +26,28 @@ const times = [
   '11:00 PM',
 ];
 
+const hours = [
+  '07 AM',
+  '08 AM',
+  '09 AM',
+  '10 AM',
+  '11 AM',
+  '12 PM',
+  '01 PM',
+  '02 PM',
+  '03 PM',
+  '04 PM',
+  '05 PM',
+  '06 PM',
+  '07 PM',
+  '08 PM',
+  '09 PM',
+  '10 PM',
+  '11 PM',
+];
+
+const minutes = ['00', '15', '30', '45'];
+
 const tracks = [
   'All',
   'LCPs',
@@ -36,6 +60,13 @@ const days = [
   'Thursday',
   'Friday',
   'Saturday',
+];
+
+const halls = [
+  'Um-Kalthoum',
+  'Abo-Kalthoum',
+  'Gozhom',
+  'Mrathom',
 ];
 
 const ocRoles = [
@@ -117,4 +148,4 @@ const permissions = {
   SCAN_OPERATIONS: 'scan_operations',
 }
 
-module.exports = { statuses, times, tracks, days, permissions };
+module.exports = { statuses, times, hours, minutes, halls, tracks, days, permissions, ocRoles };

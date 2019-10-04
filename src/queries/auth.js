@@ -9,18 +9,20 @@ const logIn = async (email, password) => {
     if (user.password !== password)
       return Promise.reject('Wrong Password, Please click on forgot my password for retrieving it.');
 
-    return jwt.sign({
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        function: user.function,
-        position: user.position,
-        lc: user.lc,
-        photo: user.picture,
-      }
-    }, process.env.SECRET_KEY);
+    const neededUserData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      function: user.function,
+      position: user.position,
+      lc: user.lc,
+      photo: user.photo,
+    }
+
+    const token = jwt.sign({ user: neededUserData }, process.env.SECRET_KEY);
+
+    return { token, user: neededUserData }
   } catch (ex) {
     return Promise.reject(ex)
   }

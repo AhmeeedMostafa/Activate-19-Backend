@@ -58,6 +58,10 @@ const findDelegateById = (id, returnFields = true) => (
     })
 );
 
+const updateUserById = (id, updates) => (
+  collection.doc(id).update(updates)
+);
+
 // Toggle Not-Attended/Checked-In/Checked-Out status
 const toggleStatus = (id, status) => {
   const userRef = collection.doc(id);
@@ -69,10 +73,10 @@ const toggleStatus = (id, status) => {
           return Promise.reject(`Delegate is already (${status}).`);
 
         t.update(userRef, { status, lastUpdated: currentDate });
-        return Promise.resolve(`Status has changed to (${status})`);
+        return Promise.resolve(`Status has been successfully changed to (${status}) y rayyyyyyyy2/a ;)`);
       })
       .catch(err => Promise.reject(err.message ? 'User not found with this resource.' : err))
   ))
 }
 
-module.exports = { findDelegateById, findDelegateByEmail, toggleStatus, getAll };
+module.exports = { findDelegateById, findDelegateByEmail, toggleStatus, getAll, updateUserById };

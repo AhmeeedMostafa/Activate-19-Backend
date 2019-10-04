@@ -21,7 +21,7 @@ router.post('/login', (req, res) => {
     return res.status(400).json(error('Email address & Password are required.'));
 
   logIn(email, password)
-    .then(token => res.set('token', token).sendStatus(204))
+    .then(result => res.set('token', result.token).status(200).json(success(result.user)))
     .catch(err => res.status(403).json(error(err)))
 });
 

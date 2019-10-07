@@ -1,9 +1,9 @@
 const router = require('express').Router();
 
-const { getAll, addSession, modifyTimeSessions } = require('../queries/agenda');
+const { getAll, addSession, shiftAgenda } = require('../queries/agenda');
 const { isUserPermittedTo } = require('../middlewares/user');
 const { success, error } = require('../assets/responses');
-const { times, days, tracks, permissions } = require('../assets/constants');
+const { days, tracks, permissions } = require('../assets/constants');
 
 // Getting all the agenda route
 router.get('/', (_, res) => {
@@ -14,32 +14,38 @@ router.get('/', (_, res) => {
 
 // Adding new session to the agenda's time route
 router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
-  const { day, time, title, startsAt, duration, faci, by, hall, track } = req.body;
-  if (!day || !time || !title || !startsAt || !duration || !faci || !by || !hall || !track)
-    return res.status(400).json(error("You are missing some property (day, time, title, startsAt, duration, faci, by, hall, track)."))
+  const { day, hour, minute, title, duration, faci, by, hall, track } = req.body;
+  if (!day || !hour || !minute || !title || !duration || !faci || !by || !hall || !track)
+    return res.status(400).json(error("You are missing some property (day, hour, minute, title, duration, faci, by, hall, track)."))
   if (!days.includes(day))
     return res.status(400).json(error("Invalid value is provided for day it must be in this form (Thrusday) in the range (Thursday - Saturday)."))
-  if (!times.includes(time))
-    return res.status(400).json(error("Invalid value is provided for time it must be in this form (04:00 PM) in the range (07:00 AM - 01:00 AM)."))
+  if (!hours.includes(hour))
+    return res.status(400).json(error("Invalid value is provided for time it must be in this form (04 PM) in the range (07 AM - 11 PM)."))
+  if (!hours.includes(minute))
+    return res.status(400).json(error("Invalid value is provided for minute it must be in this form (00 ,15, 30, 45) in the range (07:00 AM - 01:00 AM)."))
   if (!tracks.includes(track))
     return res.status(400).json(error("Invalid value is provided for Track it must be one of (All, LCPs, EB, MM, Members)."))
+
+  //04 AM
+  const [onlyHour, onlyTimeZone] = hour.split(' ');
+  const time = `${onlyHour}:00 ${onlyTimeZone}`;
+  const startsAt = `${onlyHour}:${minute} ${onlyTimeZone}`;
 
   addSession(day, time, { title, startsAt, duration, faci, hall, track, by })
     .then(result => res.status(200).json(success(result)))
     .catch(err => res.status(403).json(success(err)))
 });
 
-router.patch('/', isUserPermittedTo(permissions.EDIT_SESSION), (req, res) => {
-  const { day, time, timeSessions } = req.body;
+router.patch('/shiftAgenda', isUserPermittedTo(permissions.EDIT_SESSION), (req, res) => {
+  const { shiftValue, shiftFromHour, shiftFromMinute, day } = req.body;
 
-  if (!day || !time || !timeSessions)
-    return res.status(400).json(error("You are missing some property (day, time, timeSessions)."))
-  if (!days.includes(day))
-    return res.status(400).json(error("Invalid value is provided for day it must be in this form (Thursday) in the range (Thursday - Saturday)."))
-  if (!times.includes(time))
-    return res.status(400).json(error("Invalid value is provided for time it must be in this form (04:00 PM) in the range (07:00 AM - 01:00 AM)."))
+  if (!shiftValue || !shiftFromHour || !shiftFromMinute || !day)
+    return res.status(400).json(error("You are missing some property (Shift value, Shift from hour, Shift from minute, day)."))
+  
+  const [onlyHour, onlyTimeZone] = shiftFromHour.split(' ');
+  const shiftingFrom = `${onlyHour}:${shiftFromMinute} ${onlyTimeZone}`;
 
-  modifyTimeSessions(day, time, timeSessions)
+  shiftAgenda(shiftValue, shiftingFrom, day)
     .then(result => res.status(200).json(success(result)))
     .catch(err => res.status(403).json(success(err)))
 });

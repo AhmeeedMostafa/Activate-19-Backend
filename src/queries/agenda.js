@@ -32,11 +32,49 @@ const addSession = (day, time, sessionInfo) => {
     .catch(err => Promise.reject(`Error: ${err.message}`))
 }
 
-// Modifying the current sessions
-const modifyTimeSessions = (day, time, timeSessions) => {
-  return collection.doc(daysNumbering(day)).update({ [time]: timeSessions })
-    .then(result => Promise.resolve(timeSessions))
-    .catch(err => Promise.reject(`Error: ${err.message}`))
+// Shifting the current agenda sessions
+const shiftAgenda = (shiftValue, shiftingFrom, day) => {
+  try {
+    return db.runTransaction(t => {
+      const dayRef = collection.doc(day);
+      return t.get(dayRef)
+        .then(dayTimes => {
+          const shiftedSessions = {};
+
+          times.map(time => {
+            const timeSessions = dayTimes.data()[time];
+            if (!shiftedSessions[time])
+              shiftedSessions[time] = [];
+
+            if (moment(time, "hh:mm A").isSameOrAfter(shiftingFrom, "hh:mm A")) {
+              timeSessions.map(timeSession => {
+                timeSession.startsAt = moment(timeSession.startsAt, "hh:mm A")
+                  .add(shiftValue, 'minutes')
+                  .format('hh:mm A');
+                const increasedHourTime = moment(time, "hh:mm A")
+                  .add(1, 'hours')
+                  .format('hh:mm A');
+                if (moment(increasedHourTime).isAfter(times[times.length - 1]))
+                  shiftedSessions['ZZ'].push(timeSession);                  
+                else if (moment(increasedHourTime).isSameOrAfter(timeSession.startsAt))
+                  shiftedSessions[increasedHourTime].push(timeSession);
+                else
+                  shiftedSessions[time].push(timeSession);
+              });
+            } else {
+              shiftedSessions[time].push(dayTimes[time]);
+            }
+          });
+
+          t.update(dayRef, shiftedSessions);
+        });
+    })
+    .then(_res => Promise.resolve('Agenda shifted successfully y ngm/a.'));
+    
+    //Notify there is change in agenda...
+  } catch (err) {
+    return Promise.reject(`${err}`);
+  }
 }
 
-module.exports = { getAll, addSession, modifyTimeSessions }
+module.exports = { getAll, addSession, shiftAgenda }

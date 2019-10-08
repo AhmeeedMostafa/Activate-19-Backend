@@ -16,6 +16,7 @@ const logIn = async (email, password) => {
       role: user.role,
       function: user.function,
       position: user.position,
+      permissions: user.permissions || null,
       lc: user.lc,
       photo: user.photo,
     }

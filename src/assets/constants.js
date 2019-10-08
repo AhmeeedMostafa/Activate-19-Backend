@@ -3,7 +3,7 @@ const statuses = {
   notAttend: 'Not-attend',
   checkIn: 'Checked-in',
   checkOut: 'Checked-out',
-  merchandise: 'merchandise',
+  merchandise: 'Checked-in & paid merchandise',
 };
 
 const times = [
@@ -149,7 +149,13 @@ const permissions = {
   DELETE_MERCHANDISE: 'deleted_merchandise',
   ADD_SESSION: 'add_session',
   EDIT_SESSION: 'edit_session',
+  SHIFT_SESSIONS: 'shift_sessions',
   SCAN_OPERATIONS: 'scan_operations',
+  PUSH_NOTIFICATIONS: 'push_notifications',
+  CHECK_INFO: 'check_info',
+  CHECK_IN: 'check_in',
+  CHECK_MERCHANDISE: 'check_merchandise',
+  CHECK_OUT: 'check_out',
 }
 
 module.exports = { statuses, times, hours, minutes, halls, tracks, days, permissions, ocRoles };

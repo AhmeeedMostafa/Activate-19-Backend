@@ -1,22 +1,11 @@
 const router = require('express').Router();
-const { updateUserById } = require('../queries/delegates');
+const { addNotification } = require('../queries/notifications');
 const { success, error } = require('../assets/responses');
 const { Expo } = require('expo-server-sdk');
-const { findDelegateById, toggleStatus, getAll } = require('../queries/delegates');
-
-router.post('/', (req, res) => {
-  const { token, lc } = req.body;
-
-  if (!token)
-    return res.status(400).json(error("Please select the photo with size less than 3.5 MB to upload it."));
-
-  updateUserById(req.user.id, { notificationToken: token })
-    .then(_ => res.status(200).json(success(true)))
-    .catch(err => res.status(403).json(error(err)))
-});
+const { getAll } = require('../queries/delegates');
 
 router.post('/notify', (req, res) => {
-  const { lc, body, data } = req.body;
+  const { lc, body, title, data } = req.body;
   let page = 0;
   const pushTokens = [];
   const errors = [];
@@ -39,16 +28,14 @@ router.post('/notify', (req, res) => {
   pushTokens.map(pushToken => {
     if (!Expo.isExpoPushToken(pushToken)) {
       errors.push(`Error: Push token ${pushToken} is not a valid Expo push token`)
-      continue;
-    }
-
-    messages.push({ to: pushToken, sound: 'default', body, data })
+    } else
+      messages.push({ to: pushToken, sound: 'default', title, body, data })
   });
 
   const chunks = expo.chunkPushNotifications(messages);
   const tickets = [];
   (async () => {
-    chunks.map(chunk => {
+    chunks.map(async (chunk) => {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
         tickets.push(...ticketChunk);
@@ -70,16 +57,14 @@ router.post('/notify', (req, res) => {
   // Checking if they received the notifications successfully
   const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
   (async () => {
-    receiptIdChunks.map(chunk => {
+    receiptIdChunks.map(async (chunk) => {
       try {
         let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
 
         // The receipts specify whether Apple or Google successfully received the
         // notification and information about an error, if one occurred.
         receipts.map(receipt => {
-          if (receipt.status === 'ok') {
-            continue;
-          } else if (receipt.status === 'error') {
+          if (receipt.status === 'error') {
             errors.push(`There was an error sending a notification: ${receipt.message}`);
             if (receipt.details && receipt.details.error) {
               errors.push(`--The error code is ${receipt.details.error}`);
@@ -87,11 +72,18 @@ router.post('/notify', (req, res) => {
           }
         });
       } catch (error) {
-        console.error(error); errors.push(error)
+          errors.push(error)
       }
     });
+
+    if (errors.length <= 0) {
+      addNotification({ lc, body, title, data }, req.user.name)
+        .then(respone => res.status(200).json(success(respone)))
+        .catch(err => res.status(400).json(error(err)));
+    } else {
+      return res.status(400).json(error(JSON.stringify(errors)));
+    }
   })();
+});
 
-
-
-  module.exports = router;
+module.exports = router;

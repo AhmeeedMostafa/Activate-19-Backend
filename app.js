@@ -11,6 +11,7 @@ const agenda = require('./src/routes/agenda');
 const merchandise = require('./src/routes/merchandise');
 const photo = require('./src/routes/photo');
 const notifications = require('./src/routes/notifications');
+const orders = require('./src/routes/orders');
 
 const { success } = require('./src/assets/responses');
 
@@ -36,6 +37,7 @@ app.use('/agenda', agenda);
 app.use('/constants', constants);
 app.use('/merchandise', merchandise);
 app.use('/notifications', notifications);
+app.use('/orders', orders);
 
 app.use(function (_, res) {
   res.status(404).send("404, Invalid request page not found.")

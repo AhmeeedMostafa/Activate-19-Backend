@@ -21,8 +21,8 @@ const getAll = async (userLc) => {
 }
 
 // For adding an item into the collection of the merchandise
-const addNotification = (notificationDetails, addedById) => (
-  collection.add({ ...notificationDetails, time: currentDate, addedBy: db.doc(`delegates/${addedById}`) })
+const addNotification = (notificationDetails, addedByName) => (
+  collection.add({ ...notificationDetails, time: currentDate, addedBy: addedByName })
     .then(_result => Promise.resolve('Notification has been added successfully y ryasaaaaa.'))
     .catch(err => Promise.reject(`${err}`))
 );

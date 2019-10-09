@@ -32,7 +32,7 @@ const getAll = (page, limit, lc = null, phone = null) => {
 
 // Finding the delegate by email
 const findDelegateByEmail = (email, returnFields = true) => (
-  collection.where('email', '==', email).get()
+  collection.where('email', '==', email.toLowerCase()).get()
     .then(snapshot => {
       if (snapshot.empty)
         return Promise.reject('Invalid Email address is provided.');

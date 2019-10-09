@@ -3,7 +3,7 @@ const { success, error } = require('../assets/responses');
 const { checkUserRolePartially } = require('../assets/utilities');
 const { getAll } = require('../queries/orders');
 
-router.get('/', (req, res) => {
+router.get('/:email', (req, res) => {
     let { email } = req.params;
 
     if (!checkUserRolePartially('oc', 'type'))

@@ -9,19 +9,18 @@ const collection = db.collection('notifications');
 const getAll = async (userLc, page, limit) => {
   try {
     const offset = (limit / 2) * (page - 1);
-
     const notificationsAll = await collection.where('lc', '==', 'All').orderBy('time', 'desc').limit(limit / 2).offset(offset).get();
     const notificationsLC = await collection.where('lc', '==', userLc).orderBy('time', 'desc').limit(limit / 2).offset(offset).get();
 
-    const allNotifications = [...notificationsLC.docs, ...notificationsAll.docs];
+    const allNotifications = [];
+    notificationsLC.docs.map(doc => allNotifications.push({ id: doc.id, ...doc.data() }))
+    notificationsAll.docs.map(doc => allNotifications.push({id: doc.id, ...doc.data()}))
+
     if (allNotifications.empty)
       return Promise.resolve([])
 
-    const finalAllNotifications = [];
-    allNotifications.forEach(notification => finalAllNotifications.push({ id: notification.id, ...notification.data() }))
     return Promise.resolve(allNotifications)
   } catch (ex) {
-    console.log(ex);
     return Promise.reject(ex)
   }
 }

@@ -5,9 +5,8 @@ const { Expo } = require('expo-server-sdk');
 const { getAll } = require('../queries/delegates');
 
 router.get('/', (req, res) => {
-  const { lc, page = 1, limit = 12 } = req.query;
-  
-  getAllNotifications(lc, page, limit)
+  const { page = 1, limit = 12 } = req.query;
+  getAllNotifications(req.user.lc, page, limit)
     .then(respone => res.status(200).json(success(respone)))
     .catch(err => res.status(400).json(error(err)));
 });
@@ -36,7 +35,7 @@ router.post('/notify', (req, res) => {
     sound: 'default',
     to: [],
   }
-  let done = false;
+  let done = true;
 
   getAll(1, 1000, lc)
     .then(delegates => {
@@ -49,7 +48,7 @@ router.post('/notify', (req, res) => {
     })
     .catch(err => errors.push(`${err}.`));
 
-  if (errors.length > 1 & done) {
+  if (errors.length > 1 && done) {
     return res.status(200).json(success(`Some of the delegates will recieve the notifications & others not for some problems, ${JSON.stringify(errors)}`));
   } else if (errors.length > 1) {
     return res.status(403).json(error(`Something went wrong while sending notifications, try again later, ${JSON.stringify(errors)}`));

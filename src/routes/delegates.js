@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { findDelegateById, toggleStatus, getAll } = require('../queries/delegates');
+const { findDelegateById, toggleStatus, getAll, updateUserByEmail } = require('../queries/delegates');
 const { success, error } = require('../assets/responses');
 const { checkUserRolePartially } = require('../assets/utilities');
 const { isUserPermittedTo } = require('../middlewares/user');
@@ -30,6 +30,16 @@ router.get('/:id', (req, res) => {
       || delegate.lc == req.user.lc
       ? res.status(200).json(success(delegate))
       : res.status(403).json(error('You are not allowed to do this operation.')))
+    .catch(err => res.status(403).json(error(err)));
+});
+
+router.patch('/photo', (req, res) => {
+  const { email, photo } = req.body;
+  if (!email || !photo)
+    return res.status(400).json(error("You are missing one of the (email, photo) properties."));
+
+  updateUserByEmail(email, { photo })
+    .then(result => res.status(200).json(success(result)))
     .catch(err => res.status(403).json(error(err)));
 });
 

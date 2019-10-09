@@ -44,6 +44,23 @@ const findDelegateByEmail = (email, returnFields = true) => (
     })
 );
 
+const updateUserByEmail = async (email, updates) => {
+  const user = await findDelegateByEmail(email)
+  if (user) {
+    collection.doc(user.id).update(updates);
+    return Promise.resolve({id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      function: user.function,
+      position: user.position,
+      permissions: user.permissions || null,
+      lc: user.lc,
+      ...updates});
+  } else {
+    return Promise.reject(`${err}`);
+  }
+}
 
 // Finding Delegate by #id
 const findDelegateById = (id, returnFields = true) => (
@@ -80,4 +97,4 @@ const toggleStatus = (id, status) => {
   ))
 }
 
-module.exports = { findDelegateById, findDelegateByEmail, toggleStatus, getAll, updateUserById };
+module.exports = { findDelegateById, findDelegateByEmail, toggleStatus, getAll, updateUserById, updateUserByEmail };

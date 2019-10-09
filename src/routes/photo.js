@@ -18,22 +18,31 @@ router.post('/', (req, res) => {
   };
   firebase.initializeApp(firebaseConfig);
 
+  console.log(photo);
+  console.log(photo._parts[0][1]);
+  console.log(photo.name);
+  console.log(photo.uri);
+  console.log(photo.type);
+  console.log(photo['type']);
+  console.log(photo['name']);
+  
   if (!photo)
     return res.status(400).json(error("Please select the photo with size less than 3.5 MB to upload it."));
 
   const realphotoName = photo.name;
-  const photoExt = realphotoName.slice(realphotoName.lastIndexOf("."), realphotoName.length);
-  const allowedphotoExts = ['.jpg', '.jpeg', '.png'];
+  // const photoExt = realphotoName.slice(realphotoName.lastIndexOf("."), realphotoName.length);
+  // const allowedphotoExts = ['.jpg', '.jpeg', '.png'];
 
-  if (!allowedphotoExts.includes(photoExt.toLowerCase()))
-    return res.status(400).json(error("Only JPG, JPEG & PNG photos are allowed for uploading."));
-
-  const newphotoName = `IMG-${Math.random().toString(36).slice(2)}-${Date.now()}${photoExt}`;
+//   if (!allowedphotoExts.includes(photoExt.toLowerCase()))
+//     return res.status(400).json(error("Only JPG, JPEG & PNG photos are allowed for uploading."));
+// console.log('works!');
+  const newphotoName = `kllk.jpg`;
 
   const storage = firebase.storage();
+  console.log('before uploading works!');
+  const upload = storage.ref(`photos/${newphotoName}`).put(photo._parts[0][1]);
 
-  const upload = storage.ref(`photos/${newphotoName}`).put(photo);
-
+console.log('before state!!!');
   return upload.on('state_changed', null,
     (error) => (
       res.status(400).json(error(error.message || 'Something went wrong, please report the COD & try again later.'))

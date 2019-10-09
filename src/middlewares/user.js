@@ -9,7 +9,7 @@ const verifyUser = (req, res, next) => {
     return res.status(401).json(error('Unauthorized user, you are not allowed to do this operation please login.'))
 
   token = token.split(' ')[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err, decodedData) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedData) => {
     if (err)
       return res.status(401).json(error('Invalid login token, please login again.'))
 

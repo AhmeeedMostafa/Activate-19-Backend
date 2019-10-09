@@ -11,7 +11,7 @@ router.get('/forgot/:email', async (req, res) => {
   try {
     return res.status(200).json(success(await forgotPassword(email)));
   } catch (ex) {
-    return res.status(403).json(error(ex));
+    return res.status(403).json(error('Something went wrong while sending u the mail with password, try again later.'));
   }
 });
 

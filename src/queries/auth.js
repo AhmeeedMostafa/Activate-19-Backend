@@ -5,7 +5,7 @@ const { sendEmail } = require('../assets/utilities');
 // For logging-in user & generating his token
 const logIn = async (email, password) => {
   try {
-    const user = await findDelegateByEmail(email)
+    const user = await findDelegateByEmail(email);
     if (user.password !== password)
       return Promise.reject('Wrong Password, Please click on forgot my password for retrieving it.');
 
@@ -21,7 +21,7 @@ const logIn = async (email, password) => {
       photo: user.photo,
     }
 
-    const token = jwt.sign({ user: neededUserData }, process.env.SECRET_KEY);
+    const token = jwt.sign({ user: neededUserData }, process.env.JWT_SECRET_KEY);
 
     return { token, user: neededUserData }
   } catch (ex) {

@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "run": "node app.js",
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "repository": "https://github.com/AhmeeedMostafa/Activate-19-Backend.git",

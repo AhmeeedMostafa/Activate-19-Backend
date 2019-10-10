@@ -3,9 +3,6 @@ const router = require('express').Router();
 const { findDelegateById, toggleStatus, getAll, updateUserByEmail } = require('../queries/delegates');
 const { success, error } = require('../assets/responses');
 const { checkUserRolePartially } = require('../assets/utilities');
-const { isUserPermittedTo } = require('../middlewares/user');
-const { statuses, permissions } = require('../assets/constants');
-const transporter = require('../assets/mailer');
 
 // Retrieving all the delegates
 router.get('/', (req, res) => {
@@ -22,38 +19,16 @@ router.get('/', (req, res) => {
     .catch((err) => res.status(403).json(error(`Error: ${err}.`)))
 });
 
-router.get('/send_qr', (req, res) => {
-  let x = 0;
-  getAll(1, 650)
-    .then((delegate) => {
-      x++;
-      let mailOptions = {
-        from: 'ahmed.khallaf2@aiesec.net',
-        to: delegate.email,
-        subject: 'Your Activate19 Conference QR Code for checking-in!',
-        html: `<img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=ActCU-${delegate.id}" />`
-      };
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(x, error);
-        } else {
-          console.log('Email sent: ' + x + ' - '+ info.response);
-        }
-      });
-    
-    })
-    .catch((err) => res.status(403).json(error(`Error: ${err}.`)))
-});
-
 // Retrieving a single delegate
 router.get('/:id', (req, res) => {
   const { id } = req.params;
 
   findDelegateById(id)
-    .then(delegate => checkUserRolePartially('oc', 'type')
-      || delegate.lc == req.user.lc
-      ? res.status(200).json(success(delegate))
-      : res.status(403).json(error('You are not allowed to do this operation.')))
+    // .then(delegate => checkUserRolePartially('oc', 'type')
+    //   || delegate.lc == req.user.lc
+    //   ? res.status(200).json(success(delegate))
+    //   : res.status(403).json(error('You are not allowed to do this operation.')))
+    .then(delegate => delegate)
     .catch(err => res.status(403).json(error(err)));
 });
 

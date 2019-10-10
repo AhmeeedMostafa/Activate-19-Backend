@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const { getAll, addSession, shiftAgenda } = require('../queries/agenda');
-const { isUserPermittedTo } = require('../middlewares/user');
 const { success, error } = require('../assets/responses');
 const { days, tracks, permissions } = require('../assets/constants');
 
@@ -13,7 +12,8 @@ router.get('/', (_, res) => {
 });
 
 // Adding new session to the agenda's time route
-router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
+// router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
+router.post('/', (req, res) => {
   const { day, hour, minute, title, duration, faci, by, hall, track } = req.body;
   if (!day || !hour || !minute || !title || !duration || !faci || !by || !hall || !track)
     return res.status(400).json(error("You are missing some property (day, hour, minute, title, duration, faci, by, hall, track)."))
@@ -36,7 +36,7 @@ router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
     .catch(err => res.status(403).json(success(err)))
 });
 
-router.patch('/shiftAgenda', isUserPermittedTo(permissions.EDIT_SESSION), (req, res) => {
+router.patch('/shiftAgenda', (req, res) => {
   const { shiftValue, shiftFromHour, shiftFromMinute, day } = req.body;
 
   if (!shiftValue || !shiftFromHour || !shiftFromMinute || !day)

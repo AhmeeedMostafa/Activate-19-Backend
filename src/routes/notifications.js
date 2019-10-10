@@ -24,6 +24,7 @@ router.post('/saveToken', (req, res) => {
 router.post('/notify', (req, res) => {
   const { body, title } = req.body;
   let { lc } = req.body;
+  const chosenLC = lc;
   const errors = [];
   if (lc === 'All')
     lc = null;
@@ -44,7 +45,7 @@ router.post('/notify', (req, res) => {
           message.to.push(delegate.notificationToken)
       });
       if (message.to.length > 0)
-        done = notify(message, req.user.name);
+        done = notify(message, req.user.name, chosenLC);
     })
     .catch(err => errors.push(`${err}.`));
 

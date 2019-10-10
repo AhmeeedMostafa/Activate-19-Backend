@@ -13,8 +13,8 @@ const getAll = async (userLc, page, limit) => {
     const notificationsLC = await collection.where('lc', '==', userLc).orderBy('time', 'desc').limit(limit / 2).offset(offset).get();
 
     const allNotifications = [];
-    notificationsLC.docs.map(doc => allNotifications.push({ id: doc.id, ...doc.data() }))
     notificationsAll.docs.map(doc => allNotifications.push({id: doc.id, ...doc.data()}))
+    notificationsLC.docs.map(doc => allNotifications.push({ id: doc.id, ...doc.data() }))
 
     if (allNotifications.empty)
       return Promise.resolve([])
@@ -31,15 +31,15 @@ const saveNotificationsTokenToUser = (notificationToken, userId) => {
 }
 
 // notify the user & add the notification to DB
-const notify = async (messages, addedByName) => {
+const notify = async (message, addedByName, lc) => {
   const url = 'https://expo.io/--/api/v2/push/send';
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(messages),
+    body: JSON.stringify(message),
   });
   await response.json();
-  return addNotificationToDB({ title: message.title, body: message.body, lc: message.lc }, addedByName);
+  return addNotificationToDB({ title: message.title, body: message.body, lc: lc }, addedByName);
 }
 
 // For adding an item into the collection of the merchandise

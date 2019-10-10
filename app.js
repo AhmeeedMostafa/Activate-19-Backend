@@ -30,8 +30,8 @@ app.use('/auth', auth);
 
 app.use(verifyUser);
 
-app.get('/current_user', (req, res) => res.status(200).json(success(req.user)))
 app.use('/delegates', delegates);
+app.get('/current_user', (req, res) => res.status(200).json(success(req.user)))
 app.use('/photo', photo);
 app.use('/agenda', agenda);
 app.use('/constants', constants);

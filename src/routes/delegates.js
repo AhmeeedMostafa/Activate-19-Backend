@@ -69,13 +69,11 @@ router.patch('/photo', (req, res) => {
 
 // Toggle Delegate status between (Not-attended) & (Checked-in) & (Checked-out).
 // isUserPermittedTo middleware is checking if the user has permission to change the status or not.
-router.patch('/status', isUserPermittedTo(permissions.SCAN_OPERATIONS), (req, res) => {
+router.patch('/status', (req, res) => {
   const { id, status } = req.body;
 
   if (!id || !status)
     return res.status(400).json(error("You are missing one of the (id, status) properties."));
-  if (!statuses.includes(status))
-    return res.status(400).json(error("Invalid value is provided for (status) property."));
 
   toggleStatus(id, status)
     .then(result => res.status(200).json(success(result)))

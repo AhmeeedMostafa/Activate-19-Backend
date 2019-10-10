@@ -99,5 +99,3 @@ public
 
 # Secret/Private JSONs
 src/assets/firebaseServiceAccKey.json
-
-client_secret.json

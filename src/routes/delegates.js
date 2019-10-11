@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   const { phone } = req.query;
   let { lc } = req.query;
 
-  if (!checkUserRolePartially(req.user.role, 'oc', 'type'))
+  if (!checkUserRolePartially(req.user.role || 'delegate', 'oc', 'type'))
     lc = req.user.lc;
 
   getAll(page, limit, lc, phone)
@@ -24,7 +24,7 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   findDelegateById(id)
     .then(delegate =>
-      checkUserRolePartially(req.user.role, 'oc', 'type')
+      checkUserRolePartially(req.user.role || 'delegate', 'oc', 'type')
         || delegate.lc === req.user.lc
         ? res.status(200).json(success(delegate))
         : res.status(403).json(error('You are not allowed to do this operation.')))

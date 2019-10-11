@@ -66,8 +66,6 @@ const shiftAgenda = (shiftValue, shiftingFrom, day) => {
             }
           });
 
-          console.log("HELLOAWEWE");
-
           t.update(dayRef, shiftedSessions);
         });
     })

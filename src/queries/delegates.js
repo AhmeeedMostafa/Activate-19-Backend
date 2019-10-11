@@ -51,7 +51,7 @@ const updateUserByEmail = async (email, updates) => {
     return Promise.resolve({id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role || 'delegate',
       function: user.function,
       position: user.position,
       permissions: user.permissions || null,

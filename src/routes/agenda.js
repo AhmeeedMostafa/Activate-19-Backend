@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const { getAll, addSession, shiftAgenda } = require('../queries/agenda');
 const { success, error } = require('../assets/responses');
-const { days, tracks, permissions } = require('../assets/constants');
+const { days, tracks, hours, minutes } = require('../assets/constants');
 
 // Getting all the agenda route
 router.get('/', (_, res) => {
@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
     return res.status(400).json(error("Invalid value is provided for day it must be in this form (Thrusday) in the range (Thursday - Saturday)."))
   if (!hours.includes(hour))
     return res.status(400).json(error("Invalid value is provided for time it must be in this form (04 PM) in the range (07 AM - 11 PM)."))
-  if (!hours.includes(minute))
+  if (!minutes.includes(minute))
     return res.status(400).json(error("Invalid value is provided for minute it must be in this form (00 ,15, 30, 45) in the range (07:00 AM - 01:00 AM)."))
   if (!tracks.includes(track))
     return res.status(400).json(error("Invalid value is provided for Track it must be one of (All, LCPs, EB, MM, Members)."))

@@ -26,10 +26,6 @@ app.use(bodyParser.json());
 
 app.set('port', port);
 
-app.post('test', (req, res) => {
-  res.status(201).json(success(req.body));
-})
-
 app.use('/auth', auth);
 
 app.use(verifyUser);

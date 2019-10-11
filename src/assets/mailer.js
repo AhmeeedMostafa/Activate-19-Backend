@@ -2,7 +2,8 @@ const nodemailer = require('nodemailer');
 const { getAll } = require('../queries/delegates');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST,
+    port: process.env.
     auth: {
         user: 'ahmed.khallaf2@aiesec.net',
         pass: 'AIESECpass1'

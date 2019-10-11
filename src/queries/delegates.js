@@ -90,7 +90,7 @@ const toggleStatus = (id, status) => {
           return Promise.reject(`Delegate is already (${status}).`);
 
         t.update(userRef, { status, lastUpdated: currentDate });
-        updateOnSpreadsheet(user.data().lc, user.data().status);
+        updateOnSpreadsheet(user.data().lc, status, id);
         return Promise.resolve(`Status has been successfully changed to (${status}) y rayyyyyyyy2/a ;)`);
       })
       .catch(err => Promise.reject(err.message ? 'User not found with this resource.' : err))

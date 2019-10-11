@@ -22,13 +22,14 @@ router.get('/', (req, res) => {
 // Retrieving a single delegate
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-
+  console.log('id', id)
+  console.log('inside');
   findDelegateById(id)
-    // .then(delegate => checkUserRolePartially('oc', 'type')
-    //   || delegate.lc == req.user.lc
-    //   ? res.status(200).json(success(delegate))
-    //   : res.status(403).json(error('You are not allowed to do this operation.')))
-    .then(delegate => delegate)
+    .then(delegate =>
+      checkUserRolePartially(req.user.role, 'oc', 'type')
+        || delegate.lc === req.user.lc
+        ? res.status(200).json(success(delegate))
+        : res.status(403).json(error('You are not allowed to do this operation.')))
     .catch(err => res.status(403).json(error(err)));
 });
 

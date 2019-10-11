@@ -12,16 +12,16 @@ const chooseWorksheet = (worksheets, lc) => {
     return worksheets[n];
 }
 
-const updateOnSpreadsheet = async (lc, status) => {
+const updateOnSpreadsheet = async (lc, status, documentId) => {
     const doc = new GoogleSpreadSheet('12zWd4QELoNX63KoVrjftFTEKBEUXj8KfrcfgYILp1pQ');
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
 
     const sheet = chooseWorksheet(info.worksheets, lc);
     const rows = await promisify(sheet.getRows)({
-        query: 'documentid = xy0OHMrhfInTZfm1iH3d'
+        query: `documentid = ${documentId}`
     });
-    rows[0].checkin = status;
+    rows[0].status = status;
     rows[0].save();
 };
 

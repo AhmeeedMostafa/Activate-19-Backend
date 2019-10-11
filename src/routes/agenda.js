@@ -14,9 +14,9 @@ router.get('/', (_, res) => {
 // Adding new session to the agenda's time route
 // router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
 router.post('/', (req, res) => {
-  const { day, hour, minute, title, duration, faci, by, hall, track } = req.body;
+  const { day, hour, minute, title, duration, faci, hall, track } = req.body;
   if (!day || !hour || !minute || !title || !duration || !faci || !by || !hall || !track)
-    return res.status(400).json(error("You are missing some property (day, hour, minute, title, duration, faci, by, hall, track)."))
+    return res.status(400).json(error("You are missing some property (day, hour, minute, title, duration, faci, hall, track)."))
   if (!days.includes(day))
     return res.status(400).json(error("Invalid value is provided for day it must be in this form (Thrusday) in the range (Thursday - Saturday)."))
   if (!hours.includes(hour))
@@ -30,6 +30,7 @@ router.post('/', (req, res) => {
   const [onlyHour, onlyTimeZone] = hour.split(' ');
   const time = `${onlyHour}:00 ${onlyTimeZone}`;
   const startsAt = `${onlyHour}:${minute} ${onlyTimeZone}`;
+  const by = req.user.name;
 
   addSession(day, time, { title, startsAt, duration, faci, hall, track, by })
     .then(result => res.status(200).json(success(result)))

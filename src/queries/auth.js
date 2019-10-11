@@ -41,7 +41,7 @@ const forgotPassword = async (email) => {
           <p style='color: grey; font-size: 10px;'>Please ignore this email if you did not request a password change.</p>
         </div>`;
 
-    const send = sendEmail(email, "Your password - Activate'19 by AIESEC in CU", emailBody)
+    const send = sendEmail(email, "Your password - Activate'19 by AIESEC in CU 👻", emailBody)
     if (send)
       return Promise.resolve('Password has been sent again to your email')
     else

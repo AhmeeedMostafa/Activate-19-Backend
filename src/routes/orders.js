@@ -6,7 +6,7 @@ const { getAll } = require('../queries/orders');
 router.get('/:email', (req, res) => {
     let { email } = req.params;
 
-    if (!checkUserRolePartially('oc', 'type'))
+    if (!checkUserRolePartially(checkUserRolePartially, 'oc', 'type'))
         email = req.user.email;
 
     return getAll(page, 100, email || '')

@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   const { phone } = req.query;
   let { lc } = req.query;
 
-  if (!checkUserRolePartially('oc', 'type'))
+  if (!checkUserRolePartially(req.user.role, 'oc', 'type'))
     lc = req.user.lc;
 
   getAll(page, limit, lc, phone)

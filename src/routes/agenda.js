@@ -15,7 +15,7 @@ router.get('/', (_, res) => {
 // router.post('/', isUserPermittedTo(permissions.ADD_SESSION), (req, res) => {
 router.post('/', (req, res) => {
   const { day, hour, minute, title, duration, faci, hall, track } = req.body;
-  if (!day || !hour || !minute || !title || !duration || !faci || !by || !hall || !track)
+  if (!day || !hour || !minute || !title || !duration || !faci || !hall || !track)
     return res.status(400).json(error("You are missing some property (day, hour, minute, title, duration, faci, hall, track)."))
   if (!days.includes(day))
     return res.status(400).json(error("Invalid value is provided for day it must be in this form (Thrusday) in the range (Thursday - Saturday)."))

@@ -6,12 +6,13 @@ const { success, error } = require('../assets/responses');
 router.get('/forgot/:email', async (req, res) => {
   const { email } = req.params;
   if (!email)
-    return res.status(400).json(error('Email field it required!'))
+    return res.status(400).json(error('Email field is required!'))
 
   try {
-    return res.status(200).json(success(await forgotPassword(email)));
+    const forgot = await forgotPassword(email)
+    return res.status(200).json(success(forgot));
   } catch (ex) {
-    return res.status(403).json(error('Something went wrong while sending u the mail with password, try again later.'));
+    return res.status(403).json(error(ex || 'Something went wrong while sending u the mail with password, try again later.'));
   }
 });
 

@@ -19,30 +19,6 @@ const daysNumbering = (day) => {
   }
 }
 
-const sendEmail = async (to, subject, body) => {
-  const nodemailer = require('nodemailer');
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: false, // true for 465, false for other ports
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS, }
-  });
-
-  try {
-    const info = await transporter.sendMail({
-      from: `"${process.env.SMTP_FROM_NAME} 👻" <${process.env.SMTP_FROM_EMAIL}>`,
-      to,
-      subject,
-      html: body,
-      cc: process.env.ADMIN_EMAIL,
-    });
-
-    return Promise.resolve(true);
-  } catch (ex) {
-    return Promise.reject(ex)
-  }
-}
-
 const checkUserRolePartially = (userRole, neededRole, rolePart) => {
   // EX: oc-teamster-de
   // Type => oc
@@ -73,4 +49,4 @@ const checkUserRolePartially = (userRole, neededRole, rolePart) => {
   return checkingPart && (checkingPart.toLowerCase() == neededRole.toLowerCase() || allowedForAll.includes(checkingPart.toLowerCase()));
 }
 
-module.exports = { sortObject, daysNumbering, sendEmail, checkUserRolePartially }
+module.exports = { sortObject, daysNumbering, checkUserRolePartially }

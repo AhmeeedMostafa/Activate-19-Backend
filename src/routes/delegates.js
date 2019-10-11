@@ -22,8 +22,6 @@ router.get('/', (req, res) => {
 // Retrieving a single delegate
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  console.log('id', id)
-  console.log('inside');
   findDelegateById(id)
     .then(delegate =>
       checkUserRolePartially(req.user.role, 'oc', 'type')
